@@ -1,0 +1,24 @@
+{
+  "project": "xWalkPiCarApp",
+  "protocol_references": {
+    "xControllerCommand.h": {
+      "blob": "420fd328cdecc79c6e7ff1cf6e3bcc0d47703068",
+      "path": "common/include/xControllerCommand.h",
+      "project": "xWalkLibrary",
+      "revision": "b27f25511cc864ba62dcb1c6ddf8be91069864c4"
+    },
+    "xHal_Rpi5CarErrorSignals.h": {
+      "blob": "ee75d6f9b13389200be745b1eca0605e38d521fa",
+      "path": "include/xHal_Rpi5CarErrorSignals.h",
+      "project": "xWalk-rpi5-trace",
+      "revision": "409fe9c8d08d64ad0c672de3a7cf467e7c717657"
+    },
+    "xWalkMqttFunctions.json": {
+      "blob": "8dea18c0b41a47f7cfd528076f463729e87b8f15",
+      "path": "xWalkIoT/xWalkMqttCommon/xWalkMqttNode/config/xWalkMqttFunctions.json",
+      "project": "xWalk-rpi5-node",
+      "revision": "0545af1626dc177cb277583200e07b3852423d6c"
+    }
+  },
+  "schema_version": 1
+}

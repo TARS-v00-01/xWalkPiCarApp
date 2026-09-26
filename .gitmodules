@@ -1,0 +1,16 @@
+[submodule "xWalk-rpi5-iw"]
+	path = xWalk-rpi5-iw
+	url = https://github.com/TARS-v00-01/xWalk-rpi5-iw.git
+	branch = master
+[submodule "xWalk-rpi5-tool"]
+	path = xWalk-rpi5-tool
+	url = https://github.com/TARS-v00-01/xWalk-rpi5-tool.git
+	branch = master
+[submodule "xWalk-arm64-app"]
+	path = xWalk-arm64-app
+	url = https://github.com/TARS-v00-01/xWalk-arm64-app.git
+	branch = master
+[submodule "xWalk-pcx86-app"]
+	path = xWalk-pcx86-app
+	url = https://github.com/TARS-v00-01/xWalk-pcx86-app.git
+	branch = master

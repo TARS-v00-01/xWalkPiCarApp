@@ -1,0 +1,183 @@
+name: xWalkPiCarApp Host Quality
+'on':
+  push:
+    branches:
+    - master
+  workflow_dispatch: null
+permissions:
+  contents: read
+concurrency:
+  group: xwalk-app-host-quality-${{ github.sha }}
+  cancel-in-progress: true
+jobs:
+  preparation:
+    name: xWalk Preparation
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Run the shared Gerrit module checks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job preparation .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-preparation-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/
+
+          xWalk-arm64-app/app/build/reports/
+
+          xWalk-pcx86-app/build/ci/reports/'
+  xwalk-iw:
+    name: xWalk-rpi5-iw
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    needs:
+    - preparation
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Run the shared Gerrit module checks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-iw .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-xwalk-iw-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/
+
+          xWalk-arm64-app/app/build/reports/
+
+          xWalk-pcx86-app/build/ci/reports/'
+  xwalk-tool:
+    name: xWalk-rpi5-tool
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    needs:
+    - preparation
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Run the shared Gerrit module checks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-tool .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-xwalk-tool-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/
+
+          xWalk-arm64-app/app/build/reports/
+
+          xWalk-pcx86-app/build/ci/reports/'
+  xwalk-python:
+    name: xWalk-pcx86-app
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    needs:
+    - preparation
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Run the shared Gerrit module checks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-python .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-xwalk-python-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/
+
+          xWalk-arm64-app/app/build/reports/
+
+          xWalk-pcx86-app/build/ci/reports/'
+  xwalk-android:
+    name: xWalk-arm64-app
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    needs:
+    - preparation
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Run the shared Gerrit module checks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-android .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-xwalk-android-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/
+
+          xWalk-arm64-app/app/build/reports/
+
+          xWalk-pcx86-app/build/ci/reports/'
+  host-quality-gate:
+    name: xWalk Host Quality Gate
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    needs:
+    - xwalk-iw
+    - xwalk-tool
+    - xwalk-python
+    - xwalk-android
+    if: always()
+    steps:
+    - name: Require every module to pass
+      env:
+        NEEDS_JSON: ${{ toJSON(needs) }}
+      run: jq --exit-status 'all(.[]; .result == "success")' <<< "$NEEDS_JSON"

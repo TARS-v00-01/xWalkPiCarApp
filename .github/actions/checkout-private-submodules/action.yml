@@ -1,0 +1,9 @@
+name: Check out submitted Gerrit components
+description: Fetch exact integration gitlinks from Gerrit using the configured self-hosted runner.
+
+runs:
+  using: composite
+  steps:
+    - name: Initialize exact submitted component commits
+      shell: bash
+      run: ${{ github.action_path }}/checkout.sh
