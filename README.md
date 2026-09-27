@@ -18,7 +18,7 @@ cd xWalkPiCarApp
 python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py references .
 ```
 
-The reference helper fetches three pinned protocol contracts into ignored `protocol-contracts` for validation.
+The reference helper fetches three pinned protocol contracts into ignored `build/protocol-contracts` for validation.
 `INTEGRATION.json` records only their source revisions, paths, and blob identifiers. No reference code is
 committed here. Follow the component guides after restoring these build references:
 

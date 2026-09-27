@@ -114,7 +114,7 @@ seeded input probes and JaCoCo regression limits. Keep handwritten UI code visib
 Every quality check must have a bounded execution time and must block the final gate on failure.
 Dependency-aware CI scheduling must prevent quality and module jobs from mutating the same build tree concurrently.
 App protocol references are pinned by revision and blob in `INTEGRATION.json`, fetched privately into ignored
-`protocol-contracts`, and validated before builds. Do not commit reference source or generated build files.
+`build/protocol-contracts`, and validated before builds. Do not commit reference source or generated build files.
 
 ## Language and compiler expectations
 

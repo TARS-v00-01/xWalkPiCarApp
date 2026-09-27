@@ -133,4 +133,4 @@ Desktop.ini
 .env
 .env.*
 !.env.example
-/protocol-contracts/
+/build/protocol-contracts/
