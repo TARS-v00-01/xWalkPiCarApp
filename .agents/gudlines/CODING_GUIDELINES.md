@@ -52,6 +52,12 @@ Never push a component change directly to GitHub. GitHub hosts the configured in
 Use explicit GitHub HTTPS URLs in `.gitmodules`; GitHub component fetch remotes are permitted.
 All pinned component commits must exist on GitHub before the integration revision is published there.
 Existing clones refresh local overrides with `git submodule sync --recursive` before initialization.
+In the application integration, use `update-submodules.sh` to update sources and restore the assets pinned
+by each application's `ci/assets.json`. The workflow installs repository-local asset checkout/merge hooks
+without replacing existing hooks. Plain Git updates invoke these hooks only when a checkout occurs;
+the wrapper also repairs missing assets when revisions are unchanged. Asset downloads must retain pinned
+revisions, checksum verification, and external credentials (`HF_TOKEN` or `~/.netrc`).
+
 Cloning requires GitHub access to every private component, but no Gerrit connection or environment script.
 The dedicated synchronization service may
 fast-forward only the exact submitted Gerrit integration commit after complete

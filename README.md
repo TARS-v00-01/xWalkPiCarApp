@@ -15,6 +15,7 @@ gh auth login --hostname github.com --git-protocol https
 gh auth setup-git
 git clone --recurse-submodules https://github.com/TARS-v00-01/xWalkPiCarApp.git
 cd xWalkPiCarApp
+./update-submodules.sh
 python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py references .
 ```
 
@@ -33,11 +34,24 @@ For an existing clone, fetch the integration revision and initialize its exact c
 
 ```bash
 git submodule sync --recursive
-git submodule update --init --recursive
+./update-submodules.sh
 python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py references .
 ```
 
 Do not use `git submodule update --remote` for a reproducible integration build.
+
+`update-submodules.sh` restores the Android and desktop assets after updating the source submodules,
+even when their source revisions are unchanged. It installs local `post-checkout` and `post-merge` hooks
+so subsequent plain `git submodule update` commands restore assets when a component revision changes.
+Git does not run these hooks for an unchanged submodule; use the update script to repair missing assets.
+Existing hooks and custom hook directories are preserved. Hooks are local Git configuration and need
+installation in each clone; the update script handles this automatically.
+
+Downloads use each component's pinned `ci/assets.json` revision, with SHA-256 verification and cached reuse.
+Set `HF_TOKEN` or configure the Hugging Face entry in `~/.netrc` for private dataset access on new machines
+and CI runners. A download failure returns a nonzero exit status; rerun the update script after fixing access.
+For an asset-only offline restore, run `bash ci/restore-app-assets.sh --offline`.
+
 
 ## Quality and publication
 
