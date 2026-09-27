@@ -21,8 +21,19 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/checkout-private-submodules
-    - name: Run the shared Gerrit module checks
-      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job preparation .
+    - name: Validate Gerrit-only publication
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job preparation --check publication
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Validate exact app component gitlinks
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job preparation --check gitlinks
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Reviewed patch whitespace validation
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job preparation --check patch
+        .
       env:
         PYTHONDONTWRITEBYTECODE: '1'
     - name: Publish quality reports
@@ -52,8 +63,9 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/checkout-private-submodules
-    - name: Run the shared Gerrit module checks
-      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-iw .
+    - name: Validate Protobuf schema descriptors
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-iw --check schemas
+        .
       env:
         PYTHONDONTWRITEBYTECODE: '1'
     - name: Publish quality reports
@@ -83,8 +95,19 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/checkout-private-submodules
-    - name: Run the shared Gerrit module checks
-      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-tool .
+    - name: Gerrit tooling regression tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-tool --check tests
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Review control tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-tool --check controls
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Tool shell validation
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-tool --check shellcheck
+        .
       env:
         PYTHONDONTWRITEBYTECODE: '1'
     - name: Publish quality reports
@@ -114,8 +137,19 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/checkout-private-submodules
-    - name: Run the shared Gerrit module checks
-      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-python .
+    - name: Prepare Python test environment
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-python --check dependencies
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Validate Python Protobuf bindings
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-python --check schemas
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Run Python host tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-python --check tests
+        .
       env:
         PYTHONDONTWRITEBYTECODE: '1'
     - name: Publish quality reports
@@ -145,8 +179,19 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/checkout-private-submodules
-    - name: Run the shared Gerrit module checks
-      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-android .
+    - name: Generate and validate Android Protobuf bindings
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-android --check schemas
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Run provisioning host tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-android --check tests
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Build APKs, lint and run JVM tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-android --check build
+        .
       env:
         PYTHONDONTWRITEBYTECODE: '1'
     - name: Publish quality reports

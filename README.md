@@ -60,3 +60,7 @@ Never push source changes directly to GitHub.
 
 This integration uses [GPL-3.0-only](LICENSE), following xWalkPiCarAI. Components retain their own copyright
 and licence notices. Public integration metadata does not grant access to the private component repositories.
+
+Shared IW and tooling submissions each open one uplift review here and one in `xWalkPiCarAI`.
+GitHub Host Quality exposes schema validation, Python host tests, Android provisioning, lint, JVM tests,
+and APK builds through named steps from the same check definitions used by Gerrit.

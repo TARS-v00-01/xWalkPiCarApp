@@ -105,9 +105,8 @@ synchronized to the configured GitHub `xWalkPiCarAI/master` branch.
 `xWalkPiCarApp` follows the same Gerrit review, CI, and submitted-commit replication policy as `xWalkPiCarAI`.
 Both integration repositories are public; their component repositories stay private. Integrations own metadata,
 documentation, licences, and CI configuration. Component changes enter as exact submitted gitlink uplifts,
-not copied source trees. App integration pins IW, tooling, Android, and Python. Hardware integration retains
-its existing nine gitlinks and standalone tooling. IW uplifts target both integrations; app and tool uplifts
-target `xWalkPiCarApp`. Every integration uplift runs its complete host quality graph before submission.
+not copied source trees. App integration pins IW, tooling, Android, and Python. Hardware integration pins ten gitlinks, including tooling. Each submitted IW or tooling change creates
+one independent uplift per integration. Application changes target only `xWalkPiCarApp`. Every integration uplift runs its complete host quality graph before submission.
 App protocol references are pinned by revision and blob in `INTEGRATION.json`, fetched privately into ignored
 `protocol-contracts`, and validated before builds. Do not commit reference source or generated build files.
 
@@ -190,7 +189,7 @@ devloper-note/xwalk-rpi5-note/index.md  C++ architecture and module documentatio
 devloper-note/gerrit-note/              Gerrit administration and CI documentation
 devloper-note/mkdocs.yml                searchable developer-note wiki configuration
 Doc/image/                   hardware and project images referenced by documentation
-xWalk-rpi5-tool/                   standalone Gerrit tooling repository cloned at the workspace root, never uplifted
+xWalk-rpi5-tool/                   Gerrit tooling repository pinned and uplifted in both integrations
 xWalk-rpi5-tool/cpp-tool/          grouped C++ quality probes, fuzz harnesses, corpora, and documentation
 xWalk-rpi5-tool/cpp-tool/fuzz/     C++ fuzz harnesses and seed corpora
 xWalk-rpi5-tool/cpp-tool/quality/  host quality documentation and sanitizer availability probes
