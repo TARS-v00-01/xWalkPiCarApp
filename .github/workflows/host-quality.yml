@@ -45,11 +45,17 @@ jobs:
 
           build-host/app-integration-*.json
 
-          xWalk-arm64-app/build/ci/reports/
+          xWalk-arm64-app/build/ci/reports/*.log
 
-          xWalk-arm64-app/app/build/reports/
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
 
-          xWalk-pcx86-app/build/ci/reports/'
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
   xwalk-iw:
     name: xWalk-rpi5-iw
     runs-on:
@@ -77,11 +83,17 @@ jobs:
 
           build-host/app-integration-*.json
 
-          xWalk-arm64-app/build/ci/reports/
+          xWalk-arm64-app/build/ci/reports/*.log
 
-          xWalk-arm64-app/app/build/reports/
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
 
-          xWalk-pcx86-app/build/ci/reports/'
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
   xwalk-tool:
     name: xWalk-rpi5-tool
     runs-on:
@@ -119,11 +131,17 @@ jobs:
 
           build-host/app-integration-*.json
 
-          xWalk-arm64-app/build/ci/reports/
+          xWalk-arm64-app/build/ci/reports/*.log
 
-          xWalk-arm64-app/app/build/reports/
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
 
-          xWalk-pcx86-app/build/ci/reports/'
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
   xwalk-python:
     name: xWalk-pcx86-app
     runs-on:
@@ -161,11 +179,17 @@ jobs:
 
           build-host/app-integration-*.json
 
-          xWalk-arm64-app/build/ci/reports/
+          xWalk-arm64-app/build/ci/reports/*.log
 
-          xWalk-arm64-app/app/build/reports/
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
 
-          xWalk-pcx86-app/build/ci/reports/'
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
   xwalk-android:
     name: xWalk-arm64-app
     runs-on:
@@ -203,11 +227,106 @@ jobs:
 
           build-host/app-integration-*.json
 
-          xWalk-arm64-app/build/ci/reports/
+          xWalk-arm64-app/build/ci/reports/*.log
 
-          xWalk-arm64-app/app/build/reports/
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
 
-          xWalk-pcx86-app/build/ci/reports/'
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
+  xwalk-quality:
+    name: xWalk Quality
+    runs-on:
+    - self-hosted
+    - linux
+    - x64
+    - xwalk-ci
+    timeout-minutes: 90
+    needs:
+    - xwalk-python
+    - xwalk-android
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Prepare Python quality tools
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-dependencies
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Python static analysis (Ruff)
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-lint
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Python host tests and branch coverage
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-coverage
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Python concurrent response stress
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-stress
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Python bounded malformed-input probes
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-fuzz
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Python retained-memory regression
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check python-memory
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Java Release build and JVM tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check java-release
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Android Debug and Release static analysis
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check java-lint
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Java concurrent response stress
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check java-stress
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Java bounded malformed-input probes
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check java-fuzz
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Java JaCoCo coverage and regression limits
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-quality --check java-coverage
+        .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-quality-${{ github.sha }}
+        path: 'build-host/app-integration-*.log
+
+          build-host/app-integration-*.json
+
+          xWalk-arm64-app/build/ci/reports/*.log
+
+          xWalk-arm64-app/app/build/reports/xwalk-quality/coverage.xml
+
+          xWalk-arm64-app/app/build/reports/lint-results-*.xml
+
+          xWalk-arm64-app/app/build/test-results/**/*.xml
+
+          xWalk-pcx86-app/build/ci/reports/*.log
+
+          xWalk-pcx86-app/build/ci/reports/coverage.xml'
   host-quality-gate:
     name: xWalk Host Quality Gate
     runs-on:
@@ -220,6 +339,7 @@ jobs:
     - xwalk-tool
     - xwalk-python
     - xwalk-android
+    - xwalk-quality
     if: always()
     steps:
     - name: Require every module to pass

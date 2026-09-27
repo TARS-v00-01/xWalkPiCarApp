@@ -41,7 +41,7 @@ Do not use `git submodule update --remote` for a reproducible integration build.
 
 ## Quality and publication
 
-Gerrit and GitHub use the same Preparation, IW, tooling, Python, Android, and Host Quality Gate jobs.
+Gerrit and GitHub use the same Preparation, IW, tooling, Python, Android, xWalk Quality, and Host Quality Gate jobs.
 They check schema compatibility, tooling regressions, Python tests, Android provisioning, JVM tests, lint,
 and APK builds. Host CI never connects to robot hardware. Run the shared graph locally with:
 
@@ -64,3 +64,26 @@ and licence notices. Public integration metadata does not grant access to the pr
 Shared IW and tooling submissions each open one uplift review here and one in `xWalkPiCarAI`.
 GitHub Host Quality exposes schema validation, Python host tests, Android provisioning, lint, JVM tests,
 and APK builds through named steps from the same check definitions used by Gerrit.
+
+## Python and Java quality matrix
+
+The required `xWalk Quality` job waits for both app jobs and uses the same checks as Gerrit:
+
+| Python | Java / Android |
+| --- | --- |
+| Ruff syntax, control-flow and undefined-name analysis | Debug and Release Android Lint |
+| All host tests with branch coverage (minimum 75%) | Release APK build and JVM tests |
+| 50 races with eight simultaneous duplicate responses | 100 races with eight simultaneous duplicate responses |
+| Seeded malformed-input and calibration probes | 5,000 seeded malformed-Protobuf and calibration probes |
+| Retained allocation and sample-bound regression | JaCoCo reports with whole-app and critical-class limits |
+
+Every check has its own duration, status, log, and report artifacts. GitHub publishes logs and XML summaries;
+source-annotated coverage HTML stays in the private CI workspace. Failures block the Host Quality Gate.
+Generated bindings are excluded from coverage; handwritten GUI code remains included. JVM whole-app baselines
+are 13% lines and 15% branches because UI lifecycle execution needs separate emulator tests. ResponseGate requires
+95% line/branch coverage; SpeedEstimator requires 90% lines and 75% branches. Python's threshold combines statement
+and branch coverage. These are regression limits, not claims that all application behavior is tested.
+
+Input probes use fixed seeds and bounded corpora. They are smoke tests, not coverage-guided Jazzer/Atheris runs.
+The memory probe checks Python odometry retention; it is not a general leak detector or an Android LeakCanary run.
+No robot, broker, emulator, or hardware tests are started by this job.

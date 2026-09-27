@@ -107,6 +107,12 @@ Both integration repositories are public; their component repositories stay priv
 documentation, licences, and CI configuration. Component changes enter as exact submitted gitlink uplifts,
 not copied source trees. App integration pins IW, tooling, Android, and Python. Hardware integration pins ten gitlinks, including tooling. Each submitted IW or tooling change creates
 one independent uplift per integration. Application changes target only `xWalkPiCarApp`. Every integration uplift runs its complete host quality graph before submission.
+App integration also requires a separate `xWalk Quality` module after both application modules pass.
+Its checks are shared with component reviews: Python static analysis, branch coverage, bounded response races,
+seeded input probes and retained-memory regression; Java Release builds, Android lint, bounded response races,
+seeded input probes and JaCoCo regression limits. Keep handwritten UI code visible in coverage reports.
+Every quality check must have a bounded execution time and must block the final gate on failure.
+Dependency-aware CI scheduling must prevent quality and module jobs from mutating the same build tree concurrently.
 App protocol references are pinned by revision and blob in `INTEGRATION.json`, fetched privately into ignored
 `protocol-contracts`, and validated before builds. Do not commit reference source or generated build files.
 
