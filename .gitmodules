@@ -14,3 +14,7 @@
 	path = xWalk-pcx86-app
 	url = https://github.com/TARS-v00-01/xWalk-pcx86-app.git
 	branch = master
+[submodule "xWalk-pcx86-model"]
+	path = xWalk-pcx86-model
+	url = https://github.com/TARS-v00-01/xWalk-pcx86-model.git
+	branch = master

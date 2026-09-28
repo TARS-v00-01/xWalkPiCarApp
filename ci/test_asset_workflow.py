@@ -18,6 +18,11 @@ def git(root, *args):
 
 class AssetWorkflowTests(unittest.TestCase):
     def test_submodule_checkout_and_unchanged_update(self):
+        for app in ('xWalk-arm64-app', 'xWalk-pcx86-app', 'xWalk-pcx86-model'):
+            with self.subTest(app=app):
+                self.check_submodule_checkout_and_unchanged_update(app)
+
+    def check_submodule_checkout_and_unchanged_update(self, app):
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)
             source = base / 'source'
@@ -37,8 +42,8 @@ class AssetWorkflowTests(unittest.TestCase):
             root = base / 'integration'
             root.mkdir()
             git(root, 'init')
-            git(root, '-c', 'protocol.file.allow=always', 'submodule', 'add', str(source), 'xWalk-arm64-app')
-            module = root / 'xWalk-arm64-app'
+            git(root, '-c', 'protocol.file.allow=always', 'submodule', 'add', str(source), app)
+            module = root / app
             hooks.install(root)
             git(module, 'checkout', first)
             self.assertEqual((module / 'asset').read_text(), 'restored')

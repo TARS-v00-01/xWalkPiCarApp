@@ -20,7 +20,7 @@ fi
 
 
 def install(root):
-    for app in ('xWalk-arm64-app', 'xWalk-pcx86-app'):
+    for app in ('xWalk-arm64-app', 'xWalk-pcx86-app', 'xWalk-pcx86-model'):
         module = root / app
         if not (module / '.git').exists():
             continue

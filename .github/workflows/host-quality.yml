@@ -190,6 +190,32 @@ jobs:
           xWalk-pcx86-app/build/ci/reports/*.log
 
           xWalk-pcx86-app/build/ci/reports/coverage.xml'
+  xwalk-model:
+    name: xWalk-pcx86-model
+    runs-on: [self-hosted, linux, x64, xwalk-ci]
+    timeout-minutes: 20
+    needs: [preparation]
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Prepare model host test environment
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-model --check dependencies .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Validate model Python and notebook syntax
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-model --check syntax .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Run model host regression tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-model --check tests .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish model quality reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-model-${{ github.sha }}
+        path: build-host/app-integration-xwalk-model*.log
   xwalk-android:
     name: xWalk-arm64-app
     runs-on:
@@ -338,6 +364,7 @@ jobs:
     - xwalk-iw
     - xwalk-tool
     - xwalk-python
+    - xwalk-model
     - xwalk-android
     - xwalk-quality
     if: always()

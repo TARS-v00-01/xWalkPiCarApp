@@ -1,13 +1,14 @@
 # xWalk PiCar applications
 
-xWalkPiCarApp integrates the Python desktop GUI and native Android application with their IW schemas and tools.
+xWalkPiCarApp integrates the Python desktop GUI, native Android application and PC model training tools
+with their IW schemas and development tools.
 This public repository owns integration metadata, documentation, its licence, and CI configuration.
-Component code stays in four private repositories; this repository pins their submitted commits as submodules.
+Component code stays in five private repositories; this repository pins their submitted commits as submodules.
 The hardware integration is [xWalkPiCarAI](https://github.com/TARS-v00-01/xWalkPiCarAI).
 
 ## Clone and build
 
-Your GitHub account needs read access to all four components and the private protocol reference repositories
+Your GitHub account needs read access to all five components and the private protocol reference repositories
 xWalkLibrary, xWalk-rpi5-trace, and xWalk-rpi5-node. Authenticate before cloning:
 
 ```bash
@@ -29,6 +30,7 @@ committed here. Follow the component guides after restoring these build referenc
 | [xWalk-rpi5-tool](xWalk-rpi5-tool/README.md) | Development, verification, and Gerrit tooling |
 | [xWalk-arm64-app](xWalk-arm64-app/README.md) | Android application and build instructions |
 | [xWalk-pcx86-app](xWalk-pcx86-app/README.md) | Python desktop GUI and setup instructions |
+| [xWalk-pcx86-model](xWalk-pcx86-model/README.md) | Model training, dataset preparation and validation |
 
 For an existing clone, fetch the integration revision and initialize its exact component commits:
 
@@ -40,7 +42,7 @@ python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py re
 
 Do not use `git submodule update --remote` for a reproducible integration build.
 
-`update-submodules.sh` restores the Android and desktop assets after updating the source submodules,
+`update-submodules.sh` restores Android and desktop assets and the model input dataset after source updates,
 even when their source revisions are unchanged. It installs local `post-checkout` and `post-merge` hooks
 so subsequent plain `git submodule update` commands restore assets when a component revision changes.
 Git does not run these hooks for an unchanged submodule; use the update script to repair missing assets.
@@ -48,6 +50,7 @@ Existing hooks and custom hook directories are preserved. Hooks are local Git co
 installation in each clone; the update script handles this automatically.
 
 Downloads use each component's pinned `ci/assets.json` revision, with SHA-256 verification and cached reuse.
+The model input dataset is restored to `xWalk-pcx86-model/xWalkModelResources/xWalkInput`.
 Set `HF_TOKEN` or configure the Hugging Face entry in `~/.netrc` for private dataset access on new machines
 and CI runners. A download failure returns a nonzero exit status; rerun the update script after fixing access.
 For an asset-only offline restore, run `bash ci/restore-app-assets.sh --offline`.
@@ -55,7 +58,8 @@ For an asset-only offline restore, run `bash ci/restore-app-assets.sh --offline`
 
 ## Quality and publication
 
-Gerrit and GitHub use the same Preparation, IW, tooling, Python, Android, xWalk Quality, and Host Quality Gate jobs.
+Gerrit and GitHub share the Preparation, IW, tooling, Python, model, Android, xWalk Quality,
+and Host Quality Gate jobs.
 They check schema compatibility, tooling regressions, Python tests, Android provisioning, JVM tests, lint,
 and APK builds. Host CI never connects to robot hardware. Run the shared graph locally with:
 
