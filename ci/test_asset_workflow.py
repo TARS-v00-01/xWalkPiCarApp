@@ -1,5 +1,6 @@
 """Exercise real Git submodule hooks using local fixture repositories."""
 import importlib.util
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -47,6 +48,17 @@ class AssetWorkflowTests(unittest.TestCase):
             hooks.install(root)
             git(module, 'checkout', first)
             self.assertEqual((module / 'asset').read_text(), 'restored')
+            # A sourced environment owns restoration after Git; its hook must not duplicate it.
+            (module / 'asset').unlink()
+            subprocess.run(['git', '-C', str(module), 'checkout', '--detach', first], check=True,
+                           env=dict(os.environ, XWALK_ENV_UPDATING='1'),
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.assertFalse((module / 'asset').exists())
+            shutil.copy2(CI.parent / 'xwalk_env.sh', root)
+            subprocess.run(['bash', '-c', 'source ./xwalk_env.sh --activate && git submodule update'],
+                           cwd=root, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.assertEqual((module / 'asset').read_text(), 'restored')
+            git(module, 'checkout', first)
             (module / 'asset').unlink()
             git(root, 'submodule', 'update', '--no-fetch')
             self.assertEqual((module / 'asset').read_text(), 'restored')

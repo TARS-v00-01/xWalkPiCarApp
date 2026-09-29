@@ -52,8 +52,9 @@ Never push a component change directly to GitHub. GitHub hosts the configured in
 Use explicit GitHub HTTPS URLs in `.gitmodules`; GitHub component fetch remotes are permitted.
 All pinned component commits must exist on GitHub before the integration revision is published there.
 Existing clones refresh local overrides with `git submodule sync --recursive` before initialization.
-In the application integration, use `update-submodules.sh` to update sources and restore the assets pinned
-by each application's `ci/assets.json`. The workflow installs repository-local asset checkout/merge hooks
+In the application integration, source `xwalk_env.sh` for ordinary Git updates with asset restoration.
+Use `update-submodules.sh` for noninteractive source and asset updates without shell activation.
+Both use the assets pinned by each application's `ci/assets.json` and install local asset checkout/merge hooks
 without replacing existing hooks. Plain Git updates invoke these hooks only when a checkout occurs;
 the wrapper also repairs missing assets when revisions are unchanged. Asset downloads must retain pinned
 revisions, checksum verification, and external credentials (`HF_TOKEN` or `~/.netrc`).
@@ -105,6 +106,17 @@ requires the CI account's `Verified +1`, an authorized `Code-Review +2`, no
 unresolved blocking comments, a current mergeable patch set, and Gerrit's
 complete submit policy. Only the exact resulting merged commit may be
 synchronized to the configured GitHub `xWalkPiCarAI/master` branch.
+
+## Sourced Git update environment
+
+Both integrations provide `xwalk_env.sh`. Sourcing it initializes pinned submodules and restores manifest-owned
+assets; `--activate` only registers the checkout in the current Bash session. Its Git wrapper delegates the
+original command, then restores assets after successful pulls and submodule updates, including unchanged
+revisions. Preserve custom hooks, caller shell options, the working directory, and unrelated repositories.
+Do not store credentials in source or silently install system packages. Use the existing pinned, checksum-verified
+asset downloaders and external `HF_TOKEN` or netrc credentials. Restore failures must remain visible and nonzero
+without misreporting the Git result. `XWALK_SKIP_ASSETS=1` supports explicit source-only operations.
+Keep both integration entry points behaviorally aligned and exercise them with local Git fixture tests.
 
 ## Application integration
 

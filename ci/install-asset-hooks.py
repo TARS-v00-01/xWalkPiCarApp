@@ -8,6 +8,10 @@ MARKER = '# xWalk pinned runtime asset hook'
 HOOK = '''#!/usr/bin/env bash
 # xWalk pinned runtime asset hook
 set -euo pipefail
+# The sourced environment restores once after Git, including unchanged revisions.
+if [[ "${XWALK_ENV_UPDATING:-0}" == 1 || "${XWALK_SKIP_ASSETS:-0}" == 1 ]]; then
+    exit 0
+fi
 # A path-only checkout does not select a new asset manifest.
 if [[ "${3:-1}" == 0 ]]; then
     exit 0
