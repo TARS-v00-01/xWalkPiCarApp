@@ -2163,3 +2163,15 @@ Only fixed, bounded diagnostic categories cross the GPB rejection boundary; arbi
 stays out of responses. Optional farewell speech requires continued operation permission. Owned speech child
 processes use private process groups, bounded TERM-to-KILL escalation, and direct-child reaping. Never signal
 unrelated processes. The common `owningpointer` alias accepts an optional deleter for scoped resource cleanup.
+
+## Shared camera and process ownership
+
+The Pi Boot platform implementation holds `/run/lock/xwalk-controller.lock` before initializing hardware
+and through device teardown. Put platform-specific ownership in the existing CMake-selected platform source;
+do not add preprocessor flags or conditional compilation to shared Boot code for this behavior. Run one full subscriber for all functions; functional MQTT children use existing private IPC.
+Camera consumers deployed together use `XWALK_CAMERA_FRAME_FILE` to read atomic, bounded JPEG snapshots
+from the native `xWalkCameraSvc`. Keep the file in a private tmpfs runtime directory shared by the same
+service user. Missing, stale, or stalled feeds fail closed without opening a physical fallback camera.
+Updated direct camera providers and the camera service cooperate through `/run/lock/xwalk-camera.lock`.
+Never unlink lease files while any participant is running. Host local-video evaluation bypasses camera sharing.
+Test process ownership and snapshot failure behavior with synthetic frames or recorded media, never hardware.
