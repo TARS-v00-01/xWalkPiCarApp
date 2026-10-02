@@ -2175,3 +2175,27 @@ service user. Missing, stale, or stalled feeds fail closed without opening a phy
 Updated direct camera providers and the camera service cooperate through `/run/lock/xwalk-camera.lock`.
 Never unlink lease files while any participant is running. Host local-video evaluation bypasses camera sharing.
 Test process ownership and snapshot failure behavior with synthetic frames or recorded media, never hardware.
+
+## Configuration retention and cleanup
+
+Keep required build, runtime, deployment and CI defaults, schemas, templates,
+and configuration generators tracked in their owning Git submodule. An
+operational fix to an installed configuration must also update its tracked
+source template; a file under `/tmp`, a build directory or a server home is
+not a reproducible source of configuration.
+
+Before cleanup, reset, synchronization or deployment, inventory configuration
+and saved state in every affected submodule and on the target device. Preserve
+local overrides, calibration, account stores, device pairing, credentials and
+installed service configuration outside the cleanup paths, with private access
+permissions. Verify the backup before deleting anything and restore local state
+after synchronization. A request to remove local code changes or build outputs
+does not authorize deleting saved configuration or accounts. Never run blanket
+`git clean -fdx` against a live application or device checkout.
+
+Track sanitized examples for secret-bearing configuration and document how to
+restore them. Never commit passwords, tokens, private keys, live account stores
+or pairing credentials merely to retain configuration. Generated configuration
+must be reproducible from tracked inputs; preserve local overrides separately.
+Before publication, verify required configuration is tracked in the owning
+submodule, not merely present on disk or hidden by an ignore rule.
