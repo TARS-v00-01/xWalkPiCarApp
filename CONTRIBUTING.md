@@ -1,23 +1,26 @@
 # Request access and contribute
 
-xWalk accepts access requests and proposed fixes through GitHub. A maintainer approves repository access
-manually. Accepted source changes still pass Gerrit review and CI before publication to GitHub.
+xWalk accepts membership requests and proposed fixes through GitHub. An organization owner approves each
+membership request. The approval sends a regular-member invitation; the requester must accept it in GitHub.
+Accepted source changes still pass Gerrit review and CI before publication to GitHub.
 
-## Request private module access
+## Request organization membership
 
 1. Sign in to the GitHub account you will use for development.
-2. Open [Request private module access](https://github.com/TARS-v00-01/xWalkPiCarApp/issues/new?template=access-request.yml).
-3. Specify the modules or feature you need and explain your intended contribution.
-4. Wait for a maintainer to review the request. An issue, label, or comment does not grant access.
-5. If approved, accept the GitHub repository invitations sent to the account that opened the request.
+2. Open [Request organization membership](https://github.com/TARS-v00-01/xWalkPiCarApp/issues/new?template=access-request.yml).
+3. Explain your intended contribution and acknowledge organization-wide read access.
+4. Wait for an organization owner to approve the request with `/approve-membership`.
+5. Accept the GitHub organization invitation sent to the account that opened the request. Invitations expire
+   after seven days. You can also open the [organization invitation](https://github.com/orgs/TARS-v00-01/invitation).
 
 Requests are public. Do not include private source, credentials, device logs, or personal contact details.
-Maintainers may approve only part of a request. Read access applies only to the invited repositories and their
-private forks; it does not grant organization membership, upstream write permission, Gerrit access, or access
-to private Hugging Face datasets. Request any additional build dependencies explicitly.
+After acceptance, the organization's existing **Read** base permission gives you read access to **all private
+repositories**, including private documentation and future repositories covered by that base permission.
+The invitation grants regular membership, not an owner role or additional team permissions. Existing separately
+assigned permissions are not removed. Membership does not grant Gerrit access or private Hugging Face dataset access.
 
-See the [Git guide](GIT_GUIDE.md) after accepting your invitations. A public integration clone alone does not
-grant access to its private components.
+See the [Git guide](GIT_GUIDE.md) after accepting your invitation. You can use private forks to propose fixes;
+you do not need upstream write permission. A public integration clone alone does not grant private access.
 
 ## Report an issue or propose a fix
 
@@ -50,21 +53,25 @@ Contributors who already have Gerrit access may continue the
 
 ## Maintainer approval
 
-Only a repository administrator or organization owner may approve access.
+Only an active **organization owner** may approve membership. Repository administrator access alone is insufficient.
 
-1. Review the issue author's GitHub account and stated purpose. Use the actual issue author as the invitation
-   recipient, not a different username pasted into the request.
-2. Decide the exact modules and necessary dependencies. For the complete app checkout, the six components
-   listed in [README.md](README.md#components) also need the protocol references `xWalkLibrary`,
-   `xWalk-rpi5-trace`, and `xWalk-rpi5-node`. Hardware access depends on the integration's pinned submodules.
-3. In each approved repository, open **Settings > Collaborators and teams > Add people** and invite the issue
-   author with the **Read** role as an outside collaborator. Do not invite them to the organization or grant
-   Write, Maintain, or Admin solely to submit fixes.
-4. Record the approved repository names in the request and indicate that invitations are pending. Close the
-   request when handled; an invitation must still be accepted before access is available. A rejected request
-   receives no invitation. No label or comment triggers an automatic invitation.
-5. Review access periodically and remove repository access when it is no longer needed. Removing access does
-   not erase copies someone has already downloaded.
+1. Review the issue author's account, stated purpose, and acknowledgement of read access to all private repositories.
+2. Confirm the issue has the `membership-request` label and the organization base permission is still **Read**.
+3. Post a new comment containing only `/approve-membership`. This is the approval action.
+4. The [membership workflow](https://github.com/TARS-v00-01/xWalkPiCarApp/actions/workflows/membership-requests.yml)
+   checks your current owner role and the live request, then invites its actual author by numeric GitHub user ID.
+   A pasted username in the request cannot change the recipient. The bot reports whether an invitation was sent,
+   is already pending, or the person is already a member. The requester must still accept a pending invitation.
+5. If the workflow fails, inspect its Actions run and fix the reported configuration. Rerun that run or post a new
+   approval comment. Editing an old comment does not trigger approval. Repeated approvals preserve existing roles
+   and do not send a new invitation when membership is active or pending. Reopen a closed request before retrying.
+6. Close the request once handled. Closing an issue or deleting an approval comment does not revoke an invitation
+   or membership. Cancel pending invitations or remove members explicitly in organization **People** settings.
+   Reject a request by closing it without approving it. Review membership periodically.
+
+Older module-only requests lack the organization-wide acknowledgement and cannot trigger invitations. Ask the
+requester to submit the new form. A non-owner, bot, pull request, missing acknowledgement, changed comment, or base
+permission other than Read stops the invitation. The workflow never changes an existing member's role.
 
 For an accepted PR, review its diff before checking it out. Preserve the contributor's authorship and add a
 `Pull-Request:` source URL to the Gerrit commit message with the normal project subject and `Change-Id`.
@@ -72,21 +79,43 @@ Upload to the owning Gerrit project, wait for its current CI result and required
 Let normal replication and integration uplifts publish the result. Link the Gerrit review and submitted commit
 back to the PR before closing it; do not bypass this flow with an upstream GitHub push or merge.
 
-## Repository settings
+## Automation configuration
 
-[contributor-access.json](.github/contributor-access.json) records the intended configuration. It is a
-configuration reference, not an invitation bot. Organization owners enable **Allow forking of private
-repositories** under organization **Settings > Member privileges**. Repository admins enable **Allow forking**
-under **Settings > General** only for the listed source repositories. Repositories remain private.
+[contributor-access.json](.github/contributor-access.json) records the intended settings.
+[The workflow](.github/workflows/membership-requests.yml) runs only reviewed default-branch code on GitHub-hosted
+runners. It never checks out fork code, initializes private submodules, or runs on privileged self-hosted runners.
+The repository workflow token has only contents-read and issue-comment permissions; it cannot invite members.
 
-Keep issue tracking enabled on the public request repository and private source repositories. The organization's
-website link points to this guide. Existing organization membership and permissions are not changed by this
-setup. In particular, existing member base permissions do not determine outside-collaborator invitations.
+An organization owner must configure the separate Actions repository secret `XWALK_ORG_MEMBERSHIP_TOKEN`:
 
-Do not enable PR execution on privileged self-hosted runners or share secrets with fork workflows to implement
-this process. New contributors receive no upstream write permission, and existing Gerrit publication controls
-remain in place.
+1. Create a fine-grained personal access token owned by an active organization owner, with resource owner
+   `TARS-v00-01`. Select public repositories only; no private repository code permissions are needed.
+2. Give it organization **Members: Read and write** for invitations and membership verification, plus
+   **Administration: Read-only** to verify the organization's Read base permission. Set an expiry and rotate
+   the secret before it expires. Approve the token in organization settings if GitHub requires approval.
+3. Save it under **xWalkPiCarApp > Settings > Secrets and variables > Actions > New repository secret**, using
+   the exact name `XWALK_ORG_MEMBERSHIP_TOKEN`. An organization Actions secret with the same name also works
+   if its repository access includes the public `xWalkPiCarApp` repository. A private-repositories-only secret
+   will not be available here. Never paste tokens into issues, chat, logs, or source control.
+4. Open the **Organization membership requests** workflow and use **Run workflow** on `master`. This runs the
+   tests and a read-only readiness check without inviting anybody. Missing or invalid credentials fail closed.
+   The readiness check verifies read access and owner identity; the token's Members-write setting must also be set.
 
-GitHub references: [repository roles](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization),
-[forks](https://docs.github.com/en/pull-requests/reference/forks), and
+No invitation is sent merely because a request is opened or labelled. Only an owner's approval command starts
+invitation handling. GitHub controls invitation delivery, expiry, and acceptance. No real external account is
+invited by the automated tests or readiness check.
+
+Organization owners keep base permissions at **Read** and **Allow forking of private repositories** enabled under
+**Settings > Member privileges**. Source repositories listed in the configuration allow private forks and issues.
+All private repositories remain private. Fork PR workflows and secret sharing remain disabled. The organization's
+website link points to this guide. Maintainers continue to import accepted PRs into Gerrit for CI and publication.
+
+Run the approval and rejection tests locally:
+
+```bash
+python3 -m unittest discover -s .github/scripts/tests -v
+```
+
+GitHub references: [organization invitations](https://docs.github.com/en/organizations/managing-membership-in-your-organization/inviting-users-to-join-your-organization),
+[base permissions](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/setting-base-permissions-for-an-organization), and
 [private forking policy](https://docs.github.com/en/organizations/managing-organization-settings/managing-the-forking-policy-for-your-organization).

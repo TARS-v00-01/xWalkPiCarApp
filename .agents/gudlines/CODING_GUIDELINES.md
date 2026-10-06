@@ -63,8 +63,11 @@ Cloning requires GitHub access to every private component, but no Gerrit connect
 The dedicated synchronization service may
 fast-forward only the exact submitted Gerrit integration commit after complete
 CI and approval. Gerrit review refs must not be published to GitHub.
-GitHub pull requests may be used for contributor proposal intake. Manually approve read-only access to
-individual private repositories as outside collaborators; contributors push only to their own forks.
+GitHub pull requests may be used for contributor proposal intake. Organization owners approve membership
+requests with `/approve-membership`; the requester must then accept a regular-member invitation. Verify the
+organization base permission is Read before inviting, use the actual request author, and preserve existing roles.
+Run this narrowly scoped automation on GitHub-hosted runners using reviewed default-branch code, never fork code.
+Contributors inherit organization-wide Read access and push proposed changes only to their own forks.
 Maintainers import accepted proposals into Gerrit with contributor authorship and a `Pull-Request:` link.
 Gerrit remains the review and submission authority. Do not merge PRs directly on GitHub or run fork code
 on privileged self-hosted runners. See the public app integration `CONTRIBUTING.md` for the request process.

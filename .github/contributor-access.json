@@ -2,9 +2,9 @@
   "organization": "TARS-v00-01",
   "request_repository": "xWalkPiCarApp",
   "guide_url": "https://github.com/TARS-v00-01/xWalkPiCarApp/blob/master/CONTRIBUTING.md",
-  "approval": "manual",
-  "invitation_role": "read",
-  "invitation_scope": "individually approved repositories as outside collaborator",
+  "approval": "organization-owner comment",
+  "invitation_role": "direct_member",
+  "invitation_scope": "organization membership with Read base access to all private repositories",
   "members_can_fork_private_repositories": true,
   "private_source_repositories": [
     "xWalkDriver",
@@ -27,6 +27,11 @@
     "has_issues": true
   },
   "publication_authority": "Gerrit",
-  "automatic_invitations": false,
-  "pull_request_execution_on_self_hosted_runners": false
+  "automatic_invitations": true,
+  "pull_request_execution_on_self_hosted_runners": false,
+  "approval_command": "/approve-membership",
+  "request_label": "membership-request",
+  "default_repository_permission": "read",
+  "invitation_secret": "XWALK_ORG_MEMBERSHIP_TOKEN",
+  "invitation_runner": "GitHub-hosted ubuntu-24.04"
 }

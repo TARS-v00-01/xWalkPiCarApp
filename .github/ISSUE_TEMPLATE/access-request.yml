@@ -1,13 +1,15 @@
-name: Request private module access
-description: Ask maintainers to approve read access to selected xWalk modules.
-title: "[Access request] "
+name: Request organization membership
+description: Ask an owner to approve membership with read access to all private repositories.
+title: "[Membership request] "
+labels: [membership-request]
 body:
   - type: markdown
     attributes:
       value: |
         Requests are public. Do not include passwords, tokens, private source, or personal contact details.
-        Maintainers review each request manually. Approval is limited to the repositories they specify.
-        Invitations go to the GitHub account that opens this issue; no access is granted automatically.
+        An organization owner reviews each request before approving it.
+        Approval sends a membership invitation to the GitHub account that opens this issue.
+        You must accept that invitation before membership and organization-wide read access begin.
   - type: dropdown
     id: area
     attributes:
@@ -22,8 +24,8 @@ body:
   - type: textarea
     id: modules
     attributes:
-      label: Requested modules
-      description: List the repositories you need, or describe the feature you want to work on.
+      label: Modules of interest
+      description: Describe your area of interest. Approved membership includes all private repositories, not only these modules.
       placeholder: For example, xWalk-rpi5-yocto for imager development.
     validations:
       required: true
@@ -39,9 +41,9 @@ body:
     attributes:
       label: Contribution process
       options:
-        - label: I understand this request is public and does not grant access automatically.
+        - label: I request organization membership with read access to all private repositories, including documentation.
           required: true
-        - label: I will keep private source and logs in approved private repositories and pull requests.
+        - label: I will keep private source and logs in private repositories and pull requests.
           required: true
         - label: I understand maintainers submit accepted fixes through Gerrit before GitHub publication.
           required: true
