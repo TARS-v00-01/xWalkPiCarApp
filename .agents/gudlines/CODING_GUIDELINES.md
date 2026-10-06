@@ -142,8 +142,10 @@ seeded input probes and retained-memory regression; Java Release builds, Android
 seeded input probes and JaCoCo regression limits. Keep handwritten UI code visible in coverage reports.
 Every quality check must have a bounded execution time and must block the final gate on failure.
 Dependency-aware CI scheduling must prevent quality and module jobs from mutating the same build tree concurrently.
-App protocol references are pinned by revision and blob in `INTEGRATION.json`, fetched privately into ignored
-`build/protocol-contracts`, and validated before builds. Do not commit reference source or generated build files.
+App protocol references are pinned by revision and blob in `INTEGRATION.json` and tracked under `protocol-contracts/`.
+Schema 3 permits only the three declared snapshots; validate their tracked blobs and working files before builds.
+Refresh snapshots from submitted source history and commit them with their pins. Do not copy other component source
+or generated build files into the integration. Historical schemas retain their ignored `build/protocol-contracts` cache.
 
 ## Language and compiler expectations
 

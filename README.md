@@ -152,13 +152,14 @@ gh auth setup-git
 git clone https://github.com/TARS-v00-01/xWalkPiCarApp.git
 cd xWalkPiCarApp
 source ./xwalk_env.sh
-python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py references .
+python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py validate .
 ```
 
 The environment script initializes the exact pinned submodules and restores their assets. It does not install
-application dependencies or start training. The reference helper fetches three pinned protocol contracts into
-ignored `build/protocol-contracts`; `INTEGRATION.json` records their revisions, paths and blob identifiers.
-No reference source is committed to this integration.
+application dependencies or start training. Three pinned protocol snapshots are tracked in `protocol-contracts/`;
+`INTEGRATION.json` records their source projects, revisions, paths and blob identifiers. Validation checks both
+the tracked snapshots and working files against those pins without fetching the private reference repositories.
+These files define the app's Controller commands, error signals and MQTT function mapping; they are not build output.
 
 To start the model desktop after initialization:
 
@@ -181,8 +182,17 @@ git pull
 git submodule update
 ```
 
-If protocol-reference pins change and you need build/CI validation, refresh them separately with the
-`references .` command shown in [Clone and initialize](#clone-and-initialize).
+When updating protocol-reference pins in `INTEGRATION.json`, refresh the tracked snapshots from submitted source
+history with private repository access:
+
+```bash
+python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py references .
+git add INTEGRATION.json protocol-contracts/
+python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegration.py validate .
+```
+
+Review and commit the pins and snapshots together. Do not edit the snapshots independently of their source modules.
+Generated build output remains ignored under `build/`.
 
 Preserve local work before updating. Do not use `git submodule update --remote` for a reproducible build:
 the integration pins exact submitted component revisions.
