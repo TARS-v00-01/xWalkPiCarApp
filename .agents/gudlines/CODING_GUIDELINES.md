@@ -70,7 +70,8 @@ Run this narrowly scoped automation on GitHub-hosted runners using reviewed defa
 Contributors inherit organization-wide Read access and push proposed changes only to their own forks.
 Maintainers import accepted proposals into Gerrit with contributor authorship and a `Pull-Request:` link.
 Gerrit remains the review and submission authority. Do not merge PRs directly on GitHub or run fork code
-on privileged self-hosted runners. See the public app integration `CONTRIBUTING.md` for the request process.
+on privileged self-hosted runners. The dedicated public `TARS-v00-01/.github` repository owns this workflow and the organization profile.
+The app contribution guide links to that organization-wide request process.
 
 GitHub jobs that need component source run on the configured `xwalk-ci`
 self-hosted runner and use `.github/actions/checkout-private-submodules` to

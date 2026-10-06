@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: Request organization membership
+    url: https://github.com/TARS-v00-01/.github/issues/new?template=membership-request.yml
+    about: Request membership and read access to all private repositories of TARS-v00-01.
   - name: Access and contribution guide
-    url: https://github.com/TARS-v00-01/xWalkPiCarApp/blob/master/CONTRIBUTING.md
+    url: https://github.com/TARS-v00-01/.github/blob/master/CONTRIBUTING.md
     about: Read the approval, private-fork, and Gerrit publication process.

@@ -11,8 +11,8 @@ The hardware integration is [xWalkPiCarAI](https://github.com/TARS-v00-01/xWalkP
 
 ## Request access and contribute
 
-[Request organization membership](https://github.com/TARS-v00-01/xWalkPiCarApp/issues/new?template=access-request.yml)
-and follow the [contribution guide](CONTRIBUTING.md). An organization owner approves each request with
+[Request organization membership](https://github.com/TARS-v00-01/.github/issues/new?template=membership-request.yml)
+in the dedicated organization repository and follow the [contribution guide](CONTRIBUTING.md). An organization owner approves each request with
 `/approve-membership`. The requester then accepts the organization invitation to receive Read access to all private
 repositories. Members can propose fixes through private-fork pull requests; accepted changes
 still go through Gerrit review, CI, and submission.
