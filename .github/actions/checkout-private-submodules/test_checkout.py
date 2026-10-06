@@ -8,7 +8,7 @@ import unittest
 
 ACTION = Path(__file__).with_name('checkout.sh').resolve()
 MAPPINGS = {name: name for name in (
-    'xWalk-rpi5-iw', 'xWalk-rpi5-tool', 'xWalk-arm64-app', 'xWalk-pcx86-app', 'xWalk-pcx86-model',
+    'xWalk-rpi5-iw', 'xWalk-rpi5-tool', 'xWalk-arm64-app', 'xWalk-pcx86-app', 'xWalk-pcx86-model', 'xWalk-rpi5-yocto',
 )}
 TOOL = 'xWalk-rpi5-tool'
 

@@ -67,6 +67,7 @@ xWalk-rpi5-tool xWalk-rpi5-tool
 xWalk-arm64-app xWalk-arm64-app
 xWalk-pcx86-app xWalk-pcx86-app
 xWalk-pcx86-model xWalk-pcx86-model
+xWalk-rpi5-yocto xWalk-rpi5-yocto
 MAPPINGS
 
 mapfile -t configured_paths < <(git -C "$root" config -f .gitmodules --get-regexp '^submodule\..*\.path$')

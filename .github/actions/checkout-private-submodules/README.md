@@ -2,7 +2,7 @@
 
 This action fetches the integration's exact component revisions from authenticated Gerrit remotes.
 Each revision must be reachable from its component's submitted `master` history.
-The five app components include tooling itself; a newer tool master must not replace its pinned revision.
+The six app components include tooling and Yocto image tooling; a newer tool master must not replace its pinned revision.
 After checkout, the tool restores the private protocol references recorded by `INTEGRATION.json`.
 
 Self-hosted runners reuse their workspaces. Before switching an initialized component to its pinned
