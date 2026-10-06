@@ -2,10 +2,11 @@
 
 See the [Git guide](GIT_GUIDE.md) for cloning, source-only updates, submodules, and Gerrit reviews.
 
-xWalkPiCarApp integrates the Python desktop GUI, native Android application and PC model training tools
+xWalkPiCarApp integrates the Python desktop GUI, native Android application, PC model training tools
+and Yocto image tooling
 with their IW schemas and development tools.
 This public repository owns integration metadata, documentation, its licence, and CI configuration.
-Component code stays in five private repositories; this repository pins their submitted commits as submodules.
+Component code stays in six private repositories; this repository pins their submitted commits as submodules.
 The hardware integration is [xWalkPiCarAI](https://github.com/TARS-v00-01/xWalkPiCarAI).
 
 ## Components
@@ -17,6 +18,7 @@ The hardware integration is [xWalkPiCarAI](https://github.com/TARS-v00-01/xWalkP
 | [xWalk-arm64-app](xWalk-arm64-app/README.md) | Native Android application |
 | [xWalk-pcx86-app](xWalk-pcx86-app/README.md) | Python desktop mobility application |
 | [xWalk-pcx86-model](xWalk-pcx86-model/README.md) | Dataset packing, model training and image/video validation |
+| [xWalk-rpi5-yocto](xWalk-rpi5-yocto/README.md) | Pi image builds, imager HUD and image validation |
 
 ## Start here
 
@@ -115,7 +117,7 @@ The older `update-submodules.sh` wrapper remains available for scripts and shell
 
 ## Access and prerequisites
 
-Your GitHub account needs read access to all five private components and the protocol reference repositories
+Your GitHub account needs read access to all six private components and the protocol reference repositories
 `xWalkLibrary`, `xWalk-rpi5-trace`, and `xWalk-rpi5-node`. A public integration clone alone does not grant
 component access. Source checkout requires Git and authenticated GitHub access; asset restoration uses Python 3.
 Follow each component README for its build dependencies, Android SDK, or Python environment setup.
@@ -218,10 +220,11 @@ rerun the restore. Asset restoration does not contact the robot or start trainin
 
 ## Quality and publication
 
-Gerrit and GitHub share the Preparation, IW, tooling, Python, model, Android, xWalk Quality,
+Gerrit and GitHub share the Preparation, IW, tooling, Python, model, Yocto, Android, xWalk Quality,
 and Host Quality Gate jobs.
 They check schema compatibility, tooling regressions, Python tests, model Python/notebook syntax and asset
-restoration tests, Android provisioning, JVM tests, lint, and APK builds. Host CI never connects to robot hardware.
+restoration tests, Yocto builder/validator/offscreen GUI checks, Android provisioning, JVM tests, lint,
+and APK builds. Host CI never connects to robot hardware.
 Run the shared graph locally with:
 
 ```bash
@@ -235,6 +238,9 @@ reviews. Uplifts change the owning submodule pointer; they do not copy its sourc
 The synchronization service publishes submitted component commits to their private GitHub repositories.
 After complete integration CI, approval and submission, it publishes the exact integration commit to GitHub.
 Never push source changes directly to GitHub.
+
+Yocto submissions open an app uplift and run the complete app graph. The dedicated Yocto host checks never
+run bitbake or flash an SD card. Schema-2 metadata requires its exact submitted gitlink.
 
 Shared IW and tooling submissions each open one uplift review here and one in `xWalkPiCarAI`.
 GitHub Host Quality exposes schema validation, Python host tests, Android provisioning, lint, JVM tests,

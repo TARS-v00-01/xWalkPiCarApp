@@ -18,3 +18,7 @@
 	path = xWalk-pcx86-model
 	url = https://github.com/TARS-v00-01/xWalk-pcx86-model.git
 	branch = master
+[submodule "xWalk-rpi5-yocto"]
+	path = xWalk-rpi5-yocto
+	url = https://github.com/TARS-v00-01/xWalk-rpi5-yocto.git
+	branch = master

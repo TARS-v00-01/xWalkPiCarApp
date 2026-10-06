@@ -123,8 +123,11 @@ Keep both integration entry points behaviorally aligned and exercise them with l
 `xWalkPiCarApp` follows the same Gerrit review, CI, and submitted-commit replication policy as `xWalkPiCarAI`.
 Both integration repositories are public; their component repositories stay private. Integrations own metadata,
 documentation, licences, and CI configuration. Component changes enter as exact submitted gitlink uplifts,
-not copied source trees. App integration pins IW, tooling, Android, and Python. Hardware integration pins ten gitlinks, including tooling. Each submitted IW or tooling change creates
+not copied source trees. App integration pins IW, tooling, Android, Python, model tools, and Yocto image tooling. Hardware integration pins ten gitlinks, including tooling. Each submitted IW or tooling change creates
 one independent uplift per integration. Application changes target only `xWalkPiCarApp`. Every integration uplift runs its complete host quality graph before submission.
+App metadata schema 2 requires six gitlinks and includes the dedicated Yocto builder, offline validator,
+offscreen imager GUI and configuration checks. Historical schema-1 revisions retain their five-component graph.
+Yocto submissions uplift only into the app integration. Automatic host CI never invokes bitbake or flashes a disk.
 App integration also requires a separate `xWalk Quality` module after both application modules pass.
 Its checks are shared with component reviews: Python static analysis, branch coverage, bounded response races,
 seeded input probes and retained-memory regression; Java Release builds, Android lint, bounded response races,

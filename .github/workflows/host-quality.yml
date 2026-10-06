@@ -216,6 +216,36 @@ jobs:
       with:
         name: xwalk-app-model-${{ github.sha }}
         path: build-host/app-integration-xwalk-model*.log
+  xwalk-yocto:
+    name: xWalk-rpi5-yocto
+    runs-on: [self-hosted, linux, x64, xwalk-ci]
+    timeout-minutes: 40
+    needs: [preparation]
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./.github/actions/checkout-private-submodules
+    - name: Yocto builder host tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-yocto --check builder .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Offline image validator host tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-yocto --check validator .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Offscreen imager GUI host tests
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-yocto --check gui .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Yocto recipes, configuration and command validation
+      run: python3 -B xWalk-rpi5-tool/py-agent/gerrit-tool/py-src/xWalkAppIntegrationCi.py --job xwalk-yocto --check metadata .
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+    - name: Publish Yocto host reports
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: xwalk-app-yocto-${{ github.sha }}
+        path: build-host/app-integration-xwalk-yocto*.log
   xwalk-android:
     name: xWalk-arm64-app
     runs-on:
@@ -365,6 +395,7 @@ jobs:
     - xwalk-tool
     - xwalk-python
     - xwalk-model
+    - xwalk-yocto
     - xwalk-android
     - xwalk-quality
     if: always()
