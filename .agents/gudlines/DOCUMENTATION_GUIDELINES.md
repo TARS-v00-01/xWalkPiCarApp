@@ -45,8 +45,10 @@ Gerrit and GitHub CI must run `xWalk-rpi5-tool/doc-tool/wiki.sh verify` to valid
 links, strictly build the generated documentation artifact, and inspect it before distribution. Gerrit remains the
 authoritative review system. Only the configured `TARS-v00-01/xWalkPiCarAI/master` integration is synchronized
 to GitHub after Gerrit submission. GitHub Actions fetch pinned component source directly from Gerrit on the
-configured self-hosted runner. Documentation must not instruct developers to publish component mirrors or push
-or review through GitHub.
+configured self-hosted runner. Documentation must not instruct developers to publish component mirrors
+or merge upstream through GitHub.
+The public app contribution guide may describe access requests and proposals from contributor-owned forks;
+accepted proposals still enter Gerrit review and submission before publication.
 
 Documentation must:
 

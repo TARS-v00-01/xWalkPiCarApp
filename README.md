@@ -9,6 +9,13 @@ This public repository owns integration metadata, documentation, its licence, an
 Component code stays in six private repositories; this repository pins their submitted commits as submodules.
 The hardware integration is [xWalkPiCarAI](https://github.com/TARS-v00-01/xWalkPiCarAI).
 
+## Request access and contribute
+
+[Request private module access](https://github.com/TARS-v00-01/xWalkPiCarApp/issues/new?template=access-request.yml)
+and follow the [contribution guide](CONTRIBUTING.md). Maintainers manually approve read-only access to selected
+repositories. Approved contributors can propose fixes through private-fork pull requests; accepted changes
+still go through Gerrit review, CI, and submission.
+
 ## Components
 
 | Component | Purpose |

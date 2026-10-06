@@ -6,6 +6,7 @@ The parent `MyPiCarX` directory is a workspace; `xWalkPiCarApp` is the integrati
 
 - New checkout: [First-time setup](#first-time-setup).
 - Existing checkout: [Everyday updates](#everyday-updates).
+- Request access or propose a GitHub pull request: [Contribution guide](CONTRIBUTING.md).
 - Make a change: [Configure Gerrit contribution](#configure-gerrit-contribution).
 - Save work: [Preserve work and recover from common problems](#preserve-work-and-recover-from-common-problems).
 
@@ -145,7 +146,9 @@ Existing checkout hooks can run in those clients, but Git does not run them for 
 ## Configure Gerrit contribution
 
 These steps are for submitting a change. GitHub provides clone/fetch access; Gerrit owns review and submission.
-Do not push source changes directly to GitHub or use GitHub pull requests for this workflow.
+For direct Gerrit contribution, push only to Gerrit. Contributors without Gerrit access may instead open
+a pull request from their own fork as described in [CONTRIBUTING.md](CONTRIBUTING.md); maintainers import
+accepted proposals into Gerrit. Never push directly to or merge into the upstream GitHub repository.
 
 ### Step 1: Configure review transport from the integration root
 

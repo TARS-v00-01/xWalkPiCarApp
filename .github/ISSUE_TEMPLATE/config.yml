@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Access and contribution guide
+    url: https://github.com/TARS-v00-01/xWalkPiCarApp/blob/master/CONTRIBUTING.md
+    about: Read the approval, private-fork, and Gerrit publication process.

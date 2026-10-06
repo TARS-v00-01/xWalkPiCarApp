@@ -1,0 +1,35 @@
+name: Report a public-facing bug
+description: Report a reproducible issue without disclosing private module content.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This report is public. Report private implementation details in the affected private repository instead.
+        If you have a fix, open a pull request in the repository that owns the changed files.
+  - type: input
+    id: component
+    attributes:
+      label: Component and revision
+      description: Repository name and commit or release version.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include only sanitized, public-safe details.
+    validations:
+      required: true
