@@ -5,19 +5,19 @@
       "blob": "420fd328cdecc79c6e7ff1cf6e3bcc0d47703068",
       "path": "common/include/xControllerCommand.h",
       "project": "xWalkLibrary",
-      "revision": "32a49bbbf5c3cb148237fb7d8728cbd01a4fbde3"
+      "revision": "268cb0f1894c6d343b86b597c91e45f6d86edc20"
     },
     "xHal_Rpi5CarErrorSignals.h": {
       "blob": "ee75d6f9b13389200be745b1eca0605e38d521fa",
       "path": "include/xHal_Rpi5CarErrorSignals.h",
       "project": "xWalk-rpi5-trace",
-      "revision": "07e71c14068f91541c80830a063090430f6cd737"
+      "revision": "01f0c3b0a88ede3bdd3937c79af1e9685c9c46d1"
     },
     "xWalkMqttFunctions.json": {
       "blob": "8dea18c0b41a47f7cfd528076f463729e87b8f15",
       "path": "xWalkIoT/xWalkMqttCommon/xWalkMqttNode/xWalkConfig/xWalkMqttFunctions.json",
       "project": "xWalk-rpi5-node",
-      "revision": "69993acbd87a60d4a789c45b0da407574e1beb67"
+      "revision": "11db2b0dd40c610805faeabaeddf1fcc63760ced"
     }
   },
   "schema_version": 3
